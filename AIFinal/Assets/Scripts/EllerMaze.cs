@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 
 public class EllerMaze : MonoBehaviour
@@ -67,7 +69,7 @@ public class EllerMaze : MonoBehaviour
     {
         int currentRow = 0;
         int maxSet = 1;
-        List<int> usedSets;
+        List<int> usedSets = new List<int>();
 
         for (int count = 0; count <= sideSize; count++)
         {
@@ -114,33 +116,46 @@ public class EllerMaze : MonoBehaviour
             {
                 if(GetCell(i, currentRow).GetSet() != GetCell(i + 1, currentRow).GetSet()) //next cell is different set
                 {
-                    
+                    int randNum = Random.Range(0, 100);//Random number between 0 and 100
 
-
-
+                    if(randNum < wallChance)
+                    {
+                        SetHorizontal(GetCell(i, currentRow), GetCell(i + 1, currentRow), true);
+                    }
+                    else
+                    {
+                        SetHorizontal(GetCell(i, currentRow), GetCell(i + 1, currentRow), false);
+                        List<MazeCell> cellsWithGroup = getGroup(i + 1, currentRow);
+                        int currentSet = GetCell(i, currentRow).GetSet();
+                        foreach(MazeCell cell in cellsWithGroup)
+                        {
+                            cell.SetSet(currentSet);
+                        }
+                    }
                 }
                 else //next cell is same set, put wall
                 {
-
-
+                    SetHorizontal(GetCell(i, currentRow), GetCell(i + 1, currentRow), true);
                 }
-
-
-
-
-
-
-
             }
 
-
-
-
-
+            //adding verticle walls
 
         }
+    }
 
-
+    public List<MazeCell> getGroup(int columnOfSet, int row)
+    {
+        List<MazeCell> list = new List<MazeCell>();
+        int set = GetCell(columnOfSet, row).GetSet();
+        for(int i = columnOfSet; i < sideSize; i++)
+        {
+            if (set == GetCell(i, row).GetSet())
+            {
+                list.Add(GetCell(i, row));
+            }
+        }
+        return list;
     }
 
 
