@@ -15,8 +15,7 @@ public class MazeGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        maze.ColumnCount = startSize;
-        maze.RowCount = startSize;
+        maze = new EllerMaze(startSize, startSize);
         maze.BuildMaze();
 
 

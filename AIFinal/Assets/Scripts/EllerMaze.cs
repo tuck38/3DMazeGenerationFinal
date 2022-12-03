@@ -8,10 +8,11 @@ public class EllerMaze : MonoBehaviour
     public int RowCount;
     protected List<MazeCell> _Cells;
 
-    [SerializeField] GameObject cell;
+    [SerializeField] GameObject cell = Resources.Load<GameObject>("Prefabs/Cell");
 
     public EllerMaze(int width, int height)
     {
+        _Cells = new List<MazeCell>();
         ColumnCount = width;
         RowCount = height;
     }
@@ -22,7 +23,8 @@ public class EllerMaze : MonoBehaviour
         {
             for (int y = 0; y < RowCount; y++)
             {
-                GameObject newCell = Instantiate(cell, new Vector3(x, 0, y), Quaternion.identity);
+                GameObject newCell;
+                newCell = Instantiate(cell, new Vector3(x, 0, y), Quaternion.identity);
                 MazeCell cellComp = newCell.GetComponent<MazeCell>();
                 _Cells.Add(cellComp);
             }
