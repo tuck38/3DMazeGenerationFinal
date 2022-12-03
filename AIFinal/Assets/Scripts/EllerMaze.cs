@@ -43,7 +43,17 @@ public class EllerMaze : MonoBehaviour
         }
     }
 
+    public void SetHorizontal(MazeCell left, MazeCell right, bool value)
+    {
+        left.SetEast(value);
+        right.SetWest(value);
+    }
 
+    public void SetVertical(MazeCell top, MazeCell bottom, bool value)
+    {
+        top.SetSouth(value);
+        bottom.SetNorth(value);
+    }
 
 
 }
