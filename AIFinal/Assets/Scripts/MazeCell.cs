@@ -19,8 +19,8 @@ public class MazeCell : MonoBehaviour
     public bool GetEast() { return eastWall.activeSelf; }
     public bool GetWest() { return westWall.activeSelf; }
 
-
-
+    public void SetSet(int value) { set = value; }
+    public int GetSet() { return set; }
 
 
 

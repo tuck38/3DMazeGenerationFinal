@@ -4,24 +4,26 @@ using UnityEngine;
 
 public class EllerMaze : MonoBehaviour
 {
-    public int ColumnCount;
-    public int RowCount;
+    public int sideSize;
     protected List<MazeCell> _Cells;
 
     [SerializeField] GameObject cell = Resources.Load<GameObject>("Prefabs/Cell");
 
-    public EllerMaze(int width, int height)
+
+
+    int wallChance = 50;
+
+    public EllerMaze(int side)
     {
         _Cells = new List<MazeCell>();
-        ColumnCount = width;
-        RowCount = height;
+        sideSize = side;
     }
 
     public void BuildMaze()
     {
-        for (int x = 0; x < ColumnCount; x++)
+        for (int x = 0; x < sideSize; x++)
         {
-            for (int y = 0; y < RowCount; y++)
+            for (int y = 0; y < sideSize; y++)
             {
                 GameObject newCell;
                 newCell = Instantiate(cell, new Vector3(x, 0, y), Quaternion.identity);
@@ -29,13 +31,16 @@ public class EllerMaze : MonoBehaviour
                 _Cells.Add(cellComp);
             }
         }
+
+        //for(sideSize) Step();
+
     }
 
     public virtual MazeCell GetCell(int x, int y)
     {
-        if (x < ColumnCount && y < ColumnCount)
+        if (x < sideSize && y < sideSize) //if cell is in maze (fix later)
         {
-            return _Cells[x + y * ColumnCount];
+            return _Cells[x + y * sideSize];
         }
         else
         {
@@ -53,6 +58,89 @@ public class EllerMaze : MonoBehaviour
     {
         top.SetSouth(value);
         bottom.SetNorth(value);
+    }
+
+    //generating stuff
+
+
+    public void Step()
+    {
+        int currentRow = 0;
+        int maxSet = 1;
+        List<int> usedSets;
+
+        for (int count = 0; count <= sideSize; count++)
+        {
+            usedSets.Clear();
+
+            if(currentRow < 0 || currentRow > sideSize)
+            {
+                return;
+            }
+
+            if(currentRow == 0) //top row
+            {
+
+
+            }
+
+            if(currentRow == sideSize) //bottom row
+            {
+                for(int i = 0; i < sideSize; i++)
+                {
+                    SetHorizontal(GetCell(i, currentRow), GetCell(i+1, currentRow), false);
+                }
+                return;
+            }
+
+            for(int i = 0; i <= sideSize; i++) //assigning sets
+            {
+                if(!GetCell(i, currentRow).GetNorth())
+                {
+                    GetCell(i, currentRow).SetSet(GetCell(i, currentRow - 1).GetSet());
+
+                }
+                else
+                {
+                    GetCell(i, currentRow).SetSet(maxSet);
+                    maxSet++;
+
+                }
+            }
+
+
+            //adding horizontal walls
+            for(int i = 0; i < sideSize; i++)
+            {
+                if(GetCell(i, currentRow).GetSet() != GetCell(i + 1, currentRow).GetSet()) //next cell is different set
+                {
+                    
+
+
+
+                }
+                else //next cell is same set, put wall
+                {
+
+
+                }
+
+
+
+
+
+
+
+            }
+
+
+
+
+
+
+        }
+
+
     }
 
 
