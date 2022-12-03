@@ -24,7 +24,7 @@ public abstract class Maze<T>
 
     public virtual T GetCell(int x, int y)
     {
-        if (x < ColumnCount && z < ColumnCount)
+        if (x < ColumnCount && y < ColumnCount)
         {
             return _Cells[x + y * ColumnCount];
         }
