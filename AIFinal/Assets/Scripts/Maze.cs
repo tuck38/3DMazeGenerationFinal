@@ -10,10 +10,10 @@ using UnityEngine;
 
 //can use this to create a class that is a maze of MazeCells
 
-public abstract class Maze<T>
+abstract public class Maze<T>
 {
-    public readonly int ColumnCount;
-    public readonly int RowCount;
+    public int ColumnCount;
+    public int RowCount;
     protected List<T> _Cells;
 
     public Maze(int columnCount, int rowCount)
