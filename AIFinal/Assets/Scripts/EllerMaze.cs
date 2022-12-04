@@ -23,9 +23,9 @@ public class EllerMaze : MonoBehaviour
 
     public void BuildMaze()
     {
-        for (int x = 0; x < sideSize; x++)
+        for (int x = 0; x <= sideSize; x++)
         {
-            for (int y = 0; y < sideSize; y++)
+            for (int y = 0; y <= sideSize; y++)
             {
                 GameObject newCell;
                 newCell = Instantiate(cell, new Vector3(x, 0, y), Quaternion.identity);
@@ -34,13 +34,14 @@ public class EllerMaze : MonoBehaviour
             }
         }
 
-        //for(sideSize) Step();
+        Step();
 
     }
 
     public virtual MazeCell GetCell(int x, int y)
     {
-        if (x < sideSize && y < sideSize) //if cell is in maze (fix later)
+        /*
+        if (x <= sideSize && y <= sideSize) //if cell is in maze (fix later)
         {
             return _Cells[x + y * sideSize];
         }
@@ -48,6 +49,8 @@ public class EllerMaze : MonoBehaviour
         {
             return default(MazeCell);
         }
+        */
+        return _Cells[x + y * sideSize];
     }
 
     public void SetHorizontal(MazeCell left, MazeCell right, bool value)
@@ -67,11 +70,10 @@ public class EllerMaze : MonoBehaviour
 
     public void Step()
     {
-        int currentRow = 0;
         int maxSet = 1;
         List<int> usedSets = new List<int>();
 
-        for (int count = 0; count <= sideSize; count++)
+        for (int currentRow = 0; currentRow <= sideSize; currentRow++)
         {
             usedSets.Clear();
 
@@ -111,10 +113,14 @@ public class EllerMaze : MonoBehaviour
             }
 
 
+
+
+
             //adding horizontal walls
-            for(int i = 0; i < sideSize; i++)
+            for (int i = 0; i < sideSize; i++)
             {
-                if(GetCell(i, currentRow).GetSet() != GetCell(i + 1, currentRow).GetSet()) //next cell is different set
+                int currentSet = GetCell(i, currentRow).GetSet();
+                if (currentSet != GetCell(i + 1, currentRow).GetSet()) //next cell is different set
                 {
                     int randNum = Random.Range(0, 100);//Random number between 0 and 100
 
@@ -126,8 +132,8 @@ public class EllerMaze : MonoBehaviour
                     {
                         SetHorizontal(GetCell(i, currentRow), GetCell(i + 1, currentRow), false);
                         List<MazeCell> cellsWithGroup = getGroup(i + 1, currentRow);
-                        int currentSet = GetCell(i, currentRow).GetSet();
-                        foreach(MazeCell cell in cellsWithGroup)
+                        
+                        foreach (MazeCell cell in cellsWithGroup)
                         {
                             cell.SetSet(currentSet);
                         }
@@ -139,7 +145,34 @@ public class EllerMaze : MonoBehaviour
                 }
             }
 
-            //adding verticle walls
+            //adding vertical walls
+
+            for(int i = 0; i < sideSize;i++)
+            {
+                int currentSet = GetCell(i, currentRow).GetSet();
+                if (!usedSets.Contains(currentSet)) //current set is not in used sets
+                {
+                    List<Vector2> currentSetGroup = getGroupPos(i, currentRow);
+                    if(currentSetGroup.Count == 1)
+                    {
+                        SetVertical(GetCell((int)currentSetGroup[0].x, (int)currentSetGroup[0].y), GetCell((int)currentSetGroup[0].x, (int)currentSetGroup[0].y+1), false);
+                        
+                    }
+                    else
+                    {
+                        int randGroup = Random.Range(0, currentSetGroup.Count - 1);
+                        for(int a = 0; a < currentSetGroup.Count -1 ; a++)
+                        {
+                            if(a == randGroup)
+                            {
+                                SetVertical(GetCell((int)currentSetGroup[a].x, (int)currentSetGroup[a].y), GetCell((int)currentSetGroup[a].x, (int)currentSetGroup[a].y + 1), false);
+                            }
+                        }
+                    }
+                    usedSets.Add(currentSet);
+                }
+
+            }
 
         }
     }
@@ -153,6 +186,20 @@ public class EllerMaze : MonoBehaviour
             if (set == GetCell(i, row).GetSet())
             {
                 list.Add(GetCell(i, row));
+            }
+        }
+        return list;
+    }
+
+    public List<Vector2> getGroupPos(int columnOfSet, int row)
+    {
+        List<Vector2> list = new List<Vector2>();
+        int set = GetCell(columnOfSet, row).GetSet();
+        for (int i = columnOfSet; i < sideSize; i++)
+        {
+            if (set == GetCell(i, row).GetSet())
+            {
+                list.Add(new Vector2(i, row));
             }
         }
         return list;

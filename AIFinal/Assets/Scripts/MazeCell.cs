@@ -22,6 +22,7 @@ public class MazeCell : MonoBehaviour
     public void SetSet(int value) { set = value; }
     public int GetSet() { return set; }
 
+    
 
 
 }
