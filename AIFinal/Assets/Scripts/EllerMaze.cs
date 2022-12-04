@@ -27,6 +27,7 @@ public class EllerMaze : MonoBehaviour
         {
             for (int y = 0; y <= sideSize; y++)
             {
+                
                 GameObject newCell;
                 newCell = Instantiate(cell, new Vector3(x, 0, y), Quaternion.identity);
                 MazeCell cellComp = newCell.GetComponent<MazeCell>();
@@ -161,7 +162,7 @@ public class EllerMaze : MonoBehaviour
                     else
                     {
                         int randGroup = Random.Range(0, currentSetGroup.Count - 1);
-                        for(int a = 0; a < currentSetGroup.Count -1 ; a++)
+                        for(int a = 0; a <= currentSetGroup.Count -1 ; a++)
                         {
                             if(a == randGroup)
                             {
