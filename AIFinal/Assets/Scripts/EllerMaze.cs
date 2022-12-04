@@ -23,13 +23,13 @@ public class EllerMaze : MonoBehaviour
 
     public void BuildMaze()
     {
-        for (int x = 0; x <= sideSize; x++)
+        for (int x = 0; x <= sideSize; x++) //having y then x makes it build row by row instead of column by column
         {
             for (int y = 0; y <= sideSize; y++)
             {
                 
                 GameObject newCell;
-                newCell = Instantiate(cell, new Vector3(x, 0, y), Quaternion.identity);
+                newCell = Instantiate(cell, new Vector3(sideSize - x, 0, sideSize - y), Quaternion.identity);
                 MazeCell cellComp = newCell.GetComponent<MazeCell>();
                 _Cells.Add(cellComp);
             }
@@ -39,19 +39,21 @@ public class EllerMaze : MonoBehaviour
 
     }
 
-    public virtual MazeCell GetCell(int x, int y)
+    public MazeCell GetCell(int x, int y)
     {
-        /*
-        if (x <= sideSize && y <= sideSize) //if cell is in maze (fix later)
+        int sideLength = sideSize + 1;
+        if(x >= 0 && x <= sideLength && y >= 0 && y <= sideLength)
         {
-            return _Cells[x + y * sideSize];
+            return _Cells[x + (y * sideLength)];
         }
         else
         {
+            Debug.Log("out of bounds cell");
             return default(MazeCell);
+            
         }
-        */
-        return _Cells[x + y * sideSize];
+
+        
     }
 
     public void SetHorizontal(MazeCell left, MazeCell right, bool value)
@@ -78,11 +80,6 @@ public class EllerMaze : MonoBehaviour
         {
             usedSets.Clear();
 
-            if(currentRow < 0 || currentRow > sideSize)
-            {
-                return;
-            }
-
             if(currentRow == 0) //top row
             {
 
@@ -91,14 +88,14 @@ public class EllerMaze : MonoBehaviour
 
             if(currentRow == sideSize) //bottom row
             {
-                for(int i = 0; i < sideSize; i++)
+                for(int i = 0; i <= sideSize-1; i++)
                 {
                     SetHorizontal(GetCell(i, currentRow), GetCell(i+1, currentRow), false);
                 }
                 return;
             }
 
-            for(int i = 0; i <= sideSize; i++) //assigning sets
+            for(int i = 0; i <= sideSize-1; i++) //assigning sets
             {
                 if(!GetCell(i, currentRow).GetNorth())
                 {
@@ -112,9 +109,6 @@ public class EllerMaze : MonoBehaviour
 
                 }
             }
-
-
-
 
 
             //adding horizontal walls
@@ -148,7 +142,7 @@ public class EllerMaze : MonoBehaviour
 
             //adding vertical walls
 
-            for(int i = 0; i < sideSize;i++)
+            for(int i = 0; i <= sideSize; i++)
             {
                 int currentSet = GetCell(i, currentRow).GetSet();
                 if (!usedSets.Contains(currentSet)) //current set is not in used sets
@@ -156,7 +150,8 @@ public class EllerMaze : MonoBehaviour
                     List<Vector2> currentSetGroup = getGroupPos(i, currentRow);
                     if(currentSetGroup.Count == 1)
                     {
-                        SetVertical(GetCell((int)currentSetGroup[0].x, (int)currentSetGroup[0].y), GetCell((int)currentSetGroup[0].x, (int)currentSetGroup[0].y+1), false);
+                        SetVertical(GetCell((int)currentSetGroup[0].x, (int)currentSetGroup[0].y), GetCell((int)currentSetGroup[0].x, (int)currentSetGroup[0].y + 1), false);
+
                         
                     }
                     else
@@ -182,7 +177,7 @@ public class EllerMaze : MonoBehaviour
     {
         List<MazeCell> list = new List<MazeCell>();
         int set = GetCell(columnOfSet, row).GetSet();
-        for(int i = columnOfSet; i < sideSize; i++)
+        for(int i = 0; i <= sideSize; i++)
         {
             if (set == GetCell(i, row).GetSet())
             {
@@ -196,7 +191,7 @@ public class EllerMaze : MonoBehaviour
     {
         List<Vector2> list = new List<Vector2>();
         int set = GetCell(columnOfSet, row).GetSet();
-        for (int i = columnOfSet; i < sideSize; i++)
+        for (int i = 0; i <= sideSize; i++)
         {
             if (set == GetCell(i, row).GetSet())
             {
