@@ -11,9 +11,7 @@ public class EllerMaze : MonoBehaviour
 
     [SerializeField] GameObject cell = Resources.Load<GameObject>("Prefabs/Cell");
 
-
-
-    int wallChance = 50;
+    public int wallChance = 50;
 
     public EllerMaze(int side)
     {
@@ -27,9 +25,8 @@ public class EllerMaze : MonoBehaviour
         {
             for (int y = 0; y <= sideSize; y++)
             {
-                
                 GameObject newCell;
-                newCell = Instantiate(cell, new Vector3(sideSize - x, 0, sideSize - y), Quaternion.identity);
+                newCell = Instantiate(cell, new Vector3(sideSize - (x * cell.transform.localScale.x), 0, sideSize - (y * cell.transform.localScale.z)), Quaternion.identity);
                 MazeCell cellComp = newCell.GetComponent<MazeCell>();
                 _Cells.Add(cellComp);
             }

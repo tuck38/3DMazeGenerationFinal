@@ -17,8 +17,6 @@ public class MazeGenerator : MonoBehaviour
     {
         maze = new EllerMaze(startSize);
         maze.BuildMaze();
-
-
     }
 
     // Update is called once per frame
