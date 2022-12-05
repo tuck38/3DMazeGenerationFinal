@@ -23,6 +23,13 @@ public class MazeCell : MonoBehaviour
     public int GetSet() { return set; }
 
     
-
+    public void CopyCell(MazeCell toCopy)
+    {
+        this.SetNorth(toCopy.GetNorth());
+        this.SetSouth(toCopy.GetSouth());
+        this.SetEast(toCopy.GetEast());
+        this.SetWest(toCopy.GetWest());
+        this.SetSet(toCopy.GetSet());
+    }
 
 }
