@@ -243,6 +243,10 @@ public class EllerMaze : MonoBehaviour
             newRows.Add(newCell);
         }
 
+        for(int i = 0; i <= newRows.Count - 1; i++)
+        {
+            Debug.Log(i);
+        }
 
 
          //take out some bottom walls
@@ -255,7 +259,7 @@ public class EllerMaze : MonoBehaviour
                 if (currentSetGroup.Count == 1)
                 {
                     int place = currentSetGroup[0];
-                    SetVertical(newRows[place], newRows[place + realLength], false);
+                    SetVertical(newRows[place], newRows[place + realLength], false); //causing bug - assume it is going higher than newRows size, but it shouldn't - the highest place can be is 10, so the highest element it can go to is 21, which is in the array
                 }
                 else
                 {
@@ -265,7 +269,7 @@ public class EllerMaze : MonoBehaviour
                         if (a == randGroup)
                         {
                             int place = currentSetGroup[a];
-                            SetVertical(newRows[place], newRows[place + realLength], false);
+                            SetVertical(newRows[place], newRows[place + realLength], false);//causing bug
                         }
                     }
                 }
