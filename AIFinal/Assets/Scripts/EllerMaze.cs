@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 
@@ -11,6 +12,8 @@ public class EllerMaze : MonoBehaviour
     protected List<MazeCell> _Cells;
 
     [SerializeField] GameObject cell = Resources.Load<GameObject>("Prefabs/Cell");
+
+    [SerializeField] GameObject AI;
 
     public int wallChance = 50;
 
@@ -41,9 +44,16 @@ public class EllerMaze : MonoBehaviour
                 GameObject newCell;
                 newCell = Instantiate(cell, new Vector3(width - (x * cell.transform.localScale.x), 0, height - (y * cell.transform.localScale.z)), Quaternion.identity);
                 MazeCell cellComp = newCell.GetComponent<MazeCell>();
+                cellComp.x = x;
+                cellComp.z = y;
                 _Cells.Add(cellComp);
             }
         }
+
+        //gets the AI node by transforming its x and z to grid space
+        AStarNode parent = new AStarNode((int)(AI.transform.position.x / cell.transform.localScale.x), (int)(AI.transform.position.z / cell.transform.localScale.z),
+            GetCell((int)(AI.transform.position.x / cell.transform.localScale.x), (int)(AI.transform.position.z / cell.transform.localScale.z)));
+        //PROB NOT GONNA STAY HERE
 
         Step();
 
@@ -382,5 +392,50 @@ public class EllerMaze : MonoBehaviour
         }
         height++;
 
+    }
+
+    public List<AStarNode> getVisitables(AStarNode parent)
+    {
+        List<AStarNode> visitables = new List<AStarNode>();
+
+        if(!parent.node.GetEast())
+        {
+            if(GetCell(parent.node.x + 1, parent.node.z) != parent.node)
+            {
+                visitables.Add(new AStarNode(parent.node.x + 1, parent.node.z, GetCell(parent.node.x + 1, parent.node.z), parent));
+            }
+        }
+        if(!parent.node.GetSouth())
+        {
+            if(GetCell(parent.node.x, parent.node.z + 1) != parent.node)
+            {
+                visitables.Add(new AStarNode(parent.node.x, parent.node.z + 1, GetCell(parent.node.x, parent.node.z + 1), parent));
+            }
+        }
+        if (!parent.node.GetWest())
+        {
+            if (GetCell(parent.node.x - 1, parent.node.z) != parent.node)
+            {
+                visitables.Add(new AStarNode(parent.node.x - 1, parent.node.z, GetCell(parent.node.x - 1, parent.node.z), parent));
+            }
+        }
+        if (!parent.node.GetNorth())
+        {
+            if (GetCell(parent.node.x, parent.node.z - 1) != parent.node)
+            {
+                visitables.Add(new AStarNode(parent.node.x, parent.node.z - 1, GetCell(parent.node.x, parent.node.z - 1), parent));
+            }
+        }
+
+        return visitables;
+    }
+
+    void AStar(AStarNode parent)
+    {
+
+        List<AStarNode> visitables = getVisitables(parent);
+
+        //AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        
     }
 }

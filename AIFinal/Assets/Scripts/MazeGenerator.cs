@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 public class MazeGenerator : MonoBehaviour
@@ -22,6 +23,8 @@ public class MazeGenerator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
+
         if (Input.GetKeyDown("space"))
         {
             maze.BuildSouth();
