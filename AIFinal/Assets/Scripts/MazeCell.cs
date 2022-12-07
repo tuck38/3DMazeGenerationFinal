@@ -8,16 +8,40 @@ public class MazeCell : MonoBehaviour
 
     [SerializeField] GameObject northWall, eastWall, southWall, westWall;
 
+    bool north = true;
+    bool south = true;
+    bool east = true;
+    bool west = true;
+        
 
-    public void SetNorth(bool value) { northWall.SetActive(value); }
-    public void SetSouth(bool value) { southWall.SetActive(value); }
-    public void SetEast(bool value) { eastWall.SetActive(value); }
-    public void SetWest(bool value) { westWall.SetActive(value); }
+    public void SetNorth(bool value)
+    {
+        north = value;
+        if (northWall != null) northWall.SetActive(value);
+    }
 
-    public bool GetNorth() { return northWall.activeSelf; }
-    public bool GetSouth() { return southWall.activeSelf; }
-    public bool GetEast() { return eastWall.activeSelf; }
-    public bool GetWest() { return westWall.activeSelf; }
+    public void SetSouth(bool value)
+    {
+        south = value;
+        if (southWall != null) southWall.SetActive(value);
+    }
+
+    public void SetEast(bool value)
+    {
+        east = value;
+        if (eastWall != null) eastWall.SetActive(value);
+    }
+
+    public void SetWest(bool value)
+    {
+        west = value;
+        if (westWall != null) westWall.SetActive(value);
+    }
+
+    public bool GetNorth() { return north; }
+    public bool GetSouth() { return south; }
+    public bool GetEast() { return east; }
+    public bool GetWest() { return west; }
 
     public void SetSet(int value) { set = value; }
     public int GetSet() { return set; }

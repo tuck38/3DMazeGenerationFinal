@@ -59,7 +59,7 @@ public class EllerMaze : MonoBehaviour
         }
         else
         {
-            Debug.Log("out of bounds cell");
+            Debug.Log("out of bounds cell: " + x + " " + y);
             return default(MazeCell);
             
         }
@@ -233,6 +233,7 @@ public class EllerMaze : MonoBehaviour
     public List<MazeCell> BuildRow(List<MazeCell> topRow, int length) //length is either width or height depending on which edge is being used
     {
         int realLength = length + 1;
+        int endLength = 2 * length + 1;
         List<MazeCell> newRows = topRow;
         List<int> usedSets = new List<int>();
 
@@ -280,7 +281,7 @@ public class EllerMaze : MonoBehaviour
 
         //assign sets to new row (length -> length * 2)
         //      GetNorth -> newRows[i - length]
-        for (int i = realLength; i <= 2*realLength; i++) //assigning sets
+        for (int i = realLength; i <= endLength; i++) //assigning sets
         {
             if (!newRows[i].GetNorth())
             {
@@ -296,10 +297,10 @@ public class EllerMaze : MonoBehaviour
 
         //add horizontal walls as normal
 
-        for (int i = realLength; i < 2 * realLength; i++)
+        for (int i = realLength; i < endLength; i++)
         {
             int currentSet = newRows[i].GetSet();
-            if (currentSet != newRows[i+2].GetSet()) //next cell is different set
+            if (currentSet != newRows[i+1].GetSet()) //next cell is different set
             {
                 int randNum = Random.Range(0, 100);//Random number between 0 and 100
 
@@ -310,7 +311,7 @@ public class EllerMaze : MonoBehaviour
                 else
                 {
                     SetHorizontal(newRows[i], newRows[i+1], false);
-                    List<int> cellsWithGroup = GetSetGroupFromList(newRows, currentSet, realLength, 2*realLength);
+                    List<int> cellsWithGroup = GetSetGroupFromList(newRows, currentSet, realLength, endLength);
 
                     foreach (int cell in cellsWithGroup)
                     {
@@ -325,7 +326,7 @@ public class EllerMaze : MonoBehaviour
         }
 
         //make sure all south walls for the bottom row are true
-        for (int i = realLength; i <= 2 * realLength; i++)
+        for (int i = realLength; i <= endLength; i++)
         {
             newRows[i].SetSouth(true);
 
@@ -370,28 +371,16 @@ public class EllerMaze : MonoBehaviour
         }
 
         
-        for (int i = width+1; i <= 2*(width+1); i++)
+        for (int i = width+1; i <= 2*width+1; i++)
         {
+            int x = i - (width + 1);
+            int y = height + 1;
+
             GameObject newCell;
-            newCell = Instantiate(cell, new Vector3(width - ((i - (width+1)) * cell.transform.localScale.x), 0, height - (height * cell.transform.localScale.z) - 1), Quaternion.identity);
+            newCell = Instantiate(cell, new Vector3(width - (x * cell.transform.localScale.x), 0, height - (y * cell.transform.localScale.z)), Quaternion.identity);
             newCell.GetComponent<MazeCell>().CopyCell(newRows[i]);
         }
         height++;
 
     }
-
-
-
 }
-/*
- * for (int x = 0; x <= width; x++) //having y then x makes it build row by row instead of column by column
-        {
-            for (int y = 0; y <= height; y++)
-            {
-                GameObject newCell;
-                newCell = Instantiate(cell, new Vector3(width - (x * cell.transform.localScale.x), 0, height - (y * cell.transform.localScale.z)), Quaternion.identity);
-                MazeCell cellComp = newCell.GetComponent<MazeCell>();
-                _Cells.Add(cellComp);
-            }
-        }
-*/
