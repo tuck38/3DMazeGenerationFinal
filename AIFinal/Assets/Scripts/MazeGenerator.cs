@@ -9,9 +9,7 @@ public class MazeGenerator : MonoBehaviour
     int proximity; //how many rows the player needs to be from an edge to generate a new row 
 
 
-    EllerMaze maze;
-
-
+    public EllerMaze maze;
 
     // Start is called before the first frame update
     void Start()

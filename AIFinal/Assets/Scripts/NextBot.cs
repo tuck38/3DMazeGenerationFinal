@@ -10,7 +10,18 @@ public class NextBot : MonoBehaviour
 
     [SerializeField] GameObject player;
 
+    AStarNode playerNode;
+
+    List<AStarNode> currentPath;
+
+    bool playerFound = false;
+
     [SerializeField] float moveSpeed;
+
+    [SerializeField] GameObject cell;
+
+    //Has a reference to the maze generator to access the cells
+    [SerializeField] MazeGenerator maze;
 
     // Start is called before the first frame update
     void Start()
@@ -21,12 +32,52 @@ public class NextBot : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //FacePlayer();
+        //Gets where the player currently is
+        playerNode = new AStarNode((int)(player.transform.position.x / cell.transform.localScale.x), (int)(player.transform.position.z / cell.transform.localScale.z),
+            maze.maze.GetCell((int)(player.transform.position.x / cell.transform.localScale.x), (int)(player.transform.position.z / cell.transform.localScale.z)));
+
+
+        //gets the AI node by transforming its x and z to grid space
+        AStarNode parent = new AStarNode((int)(transform.position.x / cell.transform.localScale.x), (int)(transform.position.z / cell.transform.localScale.z),
+            maze.maze.GetCell((int)(transform.position.x / cell.transform.localScale.x), (int)(transform.position.z / cell.transform.localScale.z)));
+
+        AStar(parent);
     }
 
     private void FixedUpdate()
     {
-        MoveToPlayer();
+        MoveToPoint();
+    }
+
+    void AStar(AStarNode parent)
+    {
+        if(playerFound)
+        {
+            return;
+        }
+
+        if(parent == playerNode)
+        {
+            Debug.Log("Player Found");
+            MoveToPoint();
+            playerFound = true;
+        }
+        else
+        {
+            currentPath.Add(parent);
+            List<AStarNode> visitables = maze.maze.getVisitables(parent);
+            if(visitables.Count == 0) 
+            {
+                clearToIntersection();
+                Debug.Log("Dead end/intersection reached");
+                return;
+            }
+
+            for (int i = 0; i < visitables.Count; i++)
+            {
+                AStar(visitables[i]);
+            }
+        }
     }
 
     void FacePlayer()
@@ -42,13 +93,28 @@ public class NextBot : MonoBehaviour
         }
     }
 
-    void MoveToPlayer()
+    void MoveToPoint()
     {
         if(player)
         {
-            Vector3 playerDirection = (player.transform.position - transform.position).normalized;
+            Vector3 pointDirection = (currentPath[1].node.transform.position - transform.position).normalized;
 
-            rb.velocity = (playerDirection * moveSpeed);
+            rb.velocity = (pointDirection * moveSpeed);
+        }
+    }
+
+    void clearToIntersection()
+    {
+        for(int i = currentPath.Count - 1; i >= 0; i--)
+        {
+            if (maze.maze.getVisitables(currentPath[i]).Count == 0 || maze.maze.getVisitables(currentPath[i]).Count == 1)
+            {
+                currentPath.Remove(currentPath[i]);
+            }
+            else
+            {
+                return;
+            }
         }
     }
 }

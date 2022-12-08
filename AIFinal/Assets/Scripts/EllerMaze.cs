@@ -13,8 +13,6 @@ public class EllerMaze : MonoBehaviour
 
     [SerializeField] GameObject cell = Resources.Load<GameObject>("Prefabs/Cell");
 
-    [SerializeField] GameObject AI;
-
     public int wallChance = 50;
 
     int leftEdge = 0; //keft wall is (0, y)
@@ -49,14 +47,7 @@ public class EllerMaze : MonoBehaviour
                 _Cells.Add(cellComp);
             }
         }
-
-        //gets the AI node by transforming its x and z to grid space
-        AStarNode parent = new AStarNode((int)(AI.transform.position.x / cell.transform.localScale.x), (int)(AI.transform.position.z / cell.transform.localScale.z),
-            GetCell((int)(AI.transform.position.x / cell.transform.localScale.x), (int)(AI.transform.position.z / cell.transform.localScale.z)));
-        //PROB NOT GONNA STAY HERE
-
         Step();
-
     }
 
     public MazeCell GetCell(int x, int y)
@@ -153,10 +144,10 @@ public class EllerMaze : MonoBehaviour
 
             if (currentRow == height) //bottom row check (after adding walls so BuildRow is easier, means the original generated wall is technically incorrect but oh well)
             {
-                //for (int i = 0; i < width; i++)
-               // {
-                    //SetHorizontal(GetCell(i, currentRow), GetCell(i + 1, currentRow), false);
-               // }
+                for (int i = 0; i < width; i++)
+                {
+                    SetHorizontal(GetCell(i, currentRow), GetCell(i + 1, currentRow), false);
+                }
                 return;
             }
 
@@ -428,14 +419,5 @@ public class EllerMaze : MonoBehaviour
         }
 
         return visitables;
-    }
-
-    void AStar(AStarNode parent)
-    {
-
-        List<AStarNode> visitables = getVisitables(parent);
-
-        //AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-        
     }
 }
