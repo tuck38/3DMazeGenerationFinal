@@ -33,20 +33,26 @@ public class NextBot : MonoBehaviour
     void Update()
     {
         //Gets where the player currently is
-        playerNode = new AStarNode((int)(player.transform.position.x / cell.transform.localScale.x), (int)(player.transform.position.z / cell.transform.localScale.z),
-            maze.maze.GetCell((int)(player.transform.position.x / cell.transform.localScale.x), (int)(player.transform.position.z / cell.transform.localScale.z)));
+        playerNode = new AStarNode((int)(player.transform.position.x), (int)(player.transform.position.z),
+            maze.maze.GetCell((int)(player.transform.position.x), (int)(player.transform.position.z)));
 
 
         //gets the AI node by transforming its x and z to grid space
-        AStarNode parent = new AStarNode((int)(transform.position.x / cell.transform.localScale.x), (int)(transform.position.z / cell.transform.localScale.z),
-            maze.maze.GetCell((int)(transform.position.x / cell.transform.localScale.x), (int)(transform.position.z / cell.transform.localScale.z)));
+        AStarNode parent = new AStarNode((int)(transform.position.x), (int)(transform.position.z),
+            maze.maze.GetCell((int)(transform.position.x), (int)(transform.position.z)));
 
-        AStar(parent);
+        Debug.Log("x of node: " + (int)(player.transform.position.x / cell.transform.localScale.x));
+        Debug.Log("z of node: " + (int)(player.transform.position.z / cell.transform.localScale.z));
+
+       if (parent != null)
+       {
+            AStar(parent);
+       }
     }
 
     private void FixedUpdate()
     {
-        MoveToPoint();
+        //MoveToPoint();
     }
 
     void AStar(AStarNode parent)
