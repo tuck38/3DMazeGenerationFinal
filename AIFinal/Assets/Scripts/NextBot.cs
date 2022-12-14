@@ -70,6 +70,8 @@ public class NextBot : MonoBehaviour
         }
         else
         {
+            
+            //parent.print();
             currentPath.Add(parent);
             List<AStarNode> visitables = maze.maze.getVisitables(parent);
             if(visitables.Count == 0) 
@@ -90,7 +92,6 @@ public class NextBot : MonoBehaviour
     {
         if(player)
         {
-
             Vector3 playerDirection = (player.transform.position - transform.position).normalized;
 
             float face = Mathf.Atan2(playerDirection.z, playerDirection.z) * Mathf.Rad2Deg;

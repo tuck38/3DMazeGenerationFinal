@@ -58,4 +58,10 @@ public class MazeCell : MonoBehaviour
         this.SetSet(toCopy.GetSet());
     }
 
+    public string print()
+    {
+        string result = "cell X: " + x + ", cell Z: " + z + ", N E S W: " + (north ? 1 : 0) + " " + (east ? 1 : 0) + " " + (south ? 1 : 0) + " " + (west ? 1 : 0);
+        return result;
+    }
+
 }

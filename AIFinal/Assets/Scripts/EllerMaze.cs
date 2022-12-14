@@ -54,6 +54,8 @@ public class EllerMaze : MonoBehaviour
     {
         int sideLength = height + 1;
 
+        //world space 0, 0 is grid space width/2, height/2, so trying to pass any negative world space into this function breaks it
+
         if(x >= 0 && x <= width && y >= 0 && y <= height)
         {
             return _Cells[x + (y * sideLength)];
@@ -96,8 +98,6 @@ public class EllerMaze : MonoBehaviour
 
 
             }
-
-            
 
             for(int i = 0; i <= width; i++) //assigning sets
             {

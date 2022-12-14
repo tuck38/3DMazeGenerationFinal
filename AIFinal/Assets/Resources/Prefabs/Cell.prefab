@@ -535,6 +535,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6bb12d61a54aa142904486eab56eb55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  x: 0
+  z: 0
   northWall: {fileID: 2225522328267341705}
   eastWall: {fileID: 2225522329495566976}
   southWall: {fileID: 2225522327625311152}

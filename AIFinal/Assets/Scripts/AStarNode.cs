@@ -20,8 +20,19 @@ public class AStarNode
         parent = parent2;
     }
 
+
+
     //made ints so the floats round
     int x, z;
+
+    public int getX() { return x; }
+    public int getZ() { return z; }
+
+    public void print()
+    {
+        string result = "node X: " + x + ", node Z: " + z + ", cell: " + node.print();
+        Debug.Log(result);
+    }
 
     public MazeCell node;
     //parent node, the one that came before it in the maze
