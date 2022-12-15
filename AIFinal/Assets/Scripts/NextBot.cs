@@ -13,7 +13,6 @@ public class NextBot : MonoBehaviour
     AStarNode playerNode;
 
     List<AStarNode> currentPath;
-    Queue<AStarNode> currentPathQueue;
 
     bool playerFound = false;
 
@@ -27,7 +26,7 @@ public class NextBot : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        currentPath= new List<AStarNode>();
+        currentPath = new List<AStarNode>();
         rb = GetComponent<Rigidbody>();
     }
 
@@ -52,7 +51,14 @@ public class NextBot : MonoBehaviour
 
             if (parent != null)
             {
-                AStar(parent);
+                if(playerFound)
+                {
+                    MoveToPoint();
+                }
+                else
+                {
+                    AStar(parent);
+                }
             }
         }
     }
@@ -60,7 +66,7 @@ public class NextBot : MonoBehaviour
     private void FixedUpdate()
     {
         //FacePlayer();
-        MoveToPoint();
+        //MoveToPoint();
     }
 
     void AStar(AStarNode parent)
@@ -73,12 +79,8 @@ public class NextBot : MonoBehaviour
         if(parent.node.worldX == playerNode.node.worldX && parent.node.worldZ == playerNode.node.worldZ)
         {
             Debug.Log("Player Found");
-            for(int i = 0; i <= currentPath.Count; i++)
-            {
-                currentPathQueue.Enqueue(currentPath[i]);
-            }
             playerFound = true;
-            //MoveToPoint();
+            //playerFound= false;
         }
         else
         {
@@ -97,6 +99,7 @@ public class NextBot : MonoBehaviour
             {
                 AStar(visitables[i]);
             }
+            return;
         }
     }
 
@@ -114,25 +117,19 @@ public class NextBot : MonoBehaviour
 
     void MoveToPoint()
     {
-        if (playerFound)
+        if (player)
         {
-            if (currentPathQueue.Count > 0)
+            
+           Vector3 pointDirection = (currentPath[1].node.transform.position - transform.position).normalized;
+
+           //transform.position = currentPath[1].node.transform.position;
+           rb.velocity = (pointDirection * moveSpeed);
+           if(rb.velocity == new Vector3(0, 0, 0))
             {
-                Vector3 pointDirection = (currentPathQueue.Peek().node.transform.position - transform.position).normalized;
-
-                transform.position = currentPathQueue.Peek().node.transform.position;
-
-                //transform.position += (pointDirection * moveSpeed);
-                
-
-                currentPathQueue.Dequeue();
-            }
-            else
-            {
-                currentPath.Clear();
-                currentPath = new List<AStarNode>();
                 playerFound = false;
+                currentPath.Clear();
             }
+            Debug.Log(rb.velocity);
         }
     }
 

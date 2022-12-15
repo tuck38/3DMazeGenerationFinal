@@ -537,6 +537,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   x: 0
   z: 0
+  worldX: 0
+  worldZ: 0
   northWall: {fileID: 2225522328267341705}
   eastWall: {fileID: 2225522329495566976}
   southWall: {fileID: 2225522327625311152}

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraMovment : MonoBehaviour
+public class CameraMovement : MonoBehaviour
 {
 
     [SerializeField] float sensitivity = 100f;
