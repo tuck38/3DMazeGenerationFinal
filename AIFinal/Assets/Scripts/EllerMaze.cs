@@ -5,6 +5,7 @@ using Unity.VisualScripting;
 using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 
+
 public class EllerMaze : MonoBehaviour
 {
     public int width;
@@ -44,6 +45,8 @@ public class EllerMaze : MonoBehaviour
                 MazeCell cellComp = newCell.GetComponent<MazeCell>();
                 cellComp.x = x;
                 cellComp.z = y;
+                cellComp.worldX = (int)(width - (x * cell.transform.localScale.x));
+                cellComp.worldZ = (int)(height - (y * cell.transform.localScale.z));
                 _Cells.Add(cellComp);
             }
         }
@@ -63,11 +66,23 @@ public class EllerMaze : MonoBehaviour
         else
         {
             Debug.Log("out of bounds cell: " + x + " " + y);
-            return default(MazeCell);
+            return new MazeCell();
             
         }
+    }
 
-        
+    public MazeCell GetCellFromWorld(int x, int z)
+    {
+        for (int i = 0; i < _Cells.Count; i++)
+        {
+            if (x == _Cells[i].worldX && z == _Cells[i].worldZ)
+            {
+                Debug.Log("Cell Found!");
+                return _Cells[i];
+            }
+        }
+        Debug.Log("Cell not found");
+        return null;
     }
 
     public void SetHorizontal(MazeCell left, MazeCell right, bool value)
@@ -391,30 +406,34 @@ public class EllerMaze : MonoBehaviour
 
         if(!parent.node.GetEast())
         {
-            if(GetCell(parent.node.x + 1, parent.node.z) != parent.node)
+            if(GetCellFromWorld(parent.node.worldX, parent.node.worldZ - (int)cell.transform.localScale.z) != parent.parent.node)
             {
-                visitables.Add(new AStarNode(parent.node.x + 1, parent.node.z, GetCell(parent.node.x + 1, parent.node.z), parent));
+                visitables.Add(new AStarNode(parent.node.worldX, parent.node.worldZ - (int)cell.transform.localScale.z, GetCellFromWorld(parent.node.worldX, parent.node.worldZ - (int)cell.transform.localScale.z), parent));
             }
         }
         if(!parent.node.GetSouth())
         {
-            if(GetCell(parent.node.x, parent.node.z + 1) != parent.node)
+            if(GetCellFromWorld(parent.node.worldX - (int)cell.transform.localScale.x, parent.node.worldZ) != parent.parent.node)
             {
-                visitables.Add(new AStarNode(parent.node.x, parent.node.z + 1, GetCell(parent.node.x, parent.node.z + 1), parent));
+                visitables.Add(new AStarNode(parent.node.worldX - (int)cell.transform.localScale.x, parent.node.worldZ, GetCellFromWorld(parent.node.worldX - (int)cell.transform.localScale.x, parent.node.worldZ), parent));
             }
         }
         if (!parent.node.GetWest())
         {
-            if (GetCell(parent.node.x - 1, parent.node.z) != parent.node)
+            if (GetCellFromWorld(parent.node.worldX, parent.node.worldZ + (int)cell.transform.localScale.z) != parent.parent.node)
             {
-                visitables.Add(new AStarNode(parent.node.x - 1, parent.node.z, GetCell(parent.node.x - 1, parent.node.z), parent));
+            visitables.Add(new AStarNode(parent.node.worldX, parent.node.worldZ + (int)cell.transform.localScale.z, GetCellFromWorld(parent.node.worldX, parent.node.worldZ + (int)cell.transform.localScale.z), parent));
+            
             }
         }
         if (!parent.node.GetNorth())
         {
-            if (GetCell(parent.node.x, parent.node.z - 1) != parent.node)
+            if (GetCellFromWorld(parent.node.worldX + (int)cell.transform.localScale.x, parent.node.worldZ) != parent.parent.node)
             {
-                visitables.Add(new AStarNode(parent.node.x, parent.node.z - 1, GetCell(parent.node.x, parent.node.z - 1), parent));
+                if (GetCellFromWorld(parent.node.worldX + (int)cell.transform.localScale.x, parent.node.worldZ) != null)
+                {
+                    visitables.Add(new AStarNode(parent.node.worldX + (int)cell.transform.localScale.x, parent.node.worldZ, GetCellFromWorld(parent.node.worldX + (int)cell.transform.localScale.x, parent.node.worldZ), parent));
+                }
             }
         }
 

@@ -7,6 +7,7 @@ public class MazeCell : MonoBehaviour
     int set; //which set the cell belongs to
 
     public int x, z;
+    public int worldX, worldZ;
 
     [SerializeField] GameObject northWall, eastWall, southWall, westWall;
 

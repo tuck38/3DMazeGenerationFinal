@@ -11,11 +11,14 @@ public class MazeGenerator : MonoBehaviour
 
     public EllerMaze maze;
 
+    public bool generated = false;
+
     // Start is called before the first frame update
     void Start()
     {
         maze = new EllerMaze(startSize, startSize);
         maze.BuildMaze();
+        generated = true;
     }
 
     // Update is called once per frame

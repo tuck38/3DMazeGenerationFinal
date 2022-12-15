@@ -13,6 +13,7 @@ public class NextBot : MonoBehaviour
     AStarNode playerNode;
 
     List<AStarNode> currentPath;
+    Queue<AStarNode> currentPathQueue;
 
     bool playerFound = false;
 
@@ -26,33 +27,40 @@ public class NextBot : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        currentPath= new List<AStarNode>();
         rb = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        //Gets where the player currently is
-        playerNode = new AStarNode((int)(player.transform.position.x), (int)(player.transform.position.z),
-            maze.maze.GetCell((int)(player.transform.position.x), (int)(player.transform.position.z)));
+        if (maze.generated == true)
+        {
+            //Gets where the player currently is
+            playerNode = new AStarNode((int)(player.transform.position.x), (int)(player.transform.position.z),
+                maze.maze.GetCellFromWorld((int)(player.transform.position.x), (int)(player.transform.position.z)));
 
 
-        //gets the AI node by transforming its x and z to grid space
-        AStarNode parent = new AStarNode((int)(transform.position.x), (int)(transform.position.z),
-            maze.maze.GetCell((int)(transform.position.x), (int)(transform.position.z)));
+            //gets the AI node by transforming its x and z to grid space
+            AStarNode parent = new AStarNode((int)(transform.position.x), (int)(transform.position.z),
+                maze.maze.GetCellFromWorld((int)(transform.position.x), (int)(transform.position.z)));
 
-        Debug.Log("x of node: " + (int)(player.transform.position.x / cell.transform.localScale.x));
-        Debug.Log("z of node: " + (int)(player.transform.position.z / cell.transform.localScale.z));
+            Debug.Log("x of node: " + (int)(player.transform.position.x));
+            Debug.Log("z of node: " + (int)(player.transform.position.z));
 
-       if (parent != null)
-       {
-            AStar(parent);
-       }
+            parent.parent = parent;
+
+            if (parent != null)
+            {
+                AStar(parent);
+            }
+        }
     }
 
     private void FixedUpdate()
     {
-        //MoveToPoint();
+        //FacePlayer();
+        MoveToPoint();
     }
 
     void AStar(AStarNode parent)
@@ -62,11 +70,15 @@ public class NextBot : MonoBehaviour
             return;
         }
 
-        if(parent == playerNode)
+        if(parent.node.worldX == playerNode.node.worldX && parent.node.worldZ == playerNode.node.worldZ)
         {
             Debug.Log("Player Found");
-            MoveToPoint();
+            for(int i = 0; i <= currentPath.Count; i++)
+            {
+                currentPathQueue.Enqueue(currentPath[i]);
+            }
             playerFound = true;
+            //MoveToPoint();
         }
         else
         {
@@ -102,11 +114,25 @@ public class NextBot : MonoBehaviour
 
     void MoveToPoint()
     {
-        if(player)
+        if (playerFound)
         {
-            Vector3 pointDirection = (currentPath[1].node.transform.position - transform.position).normalized;
+            if (currentPathQueue.Count > 0)
+            {
+                Vector3 pointDirection = (currentPathQueue.Peek().node.transform.position - transform.position).normalized;
 
-            rb.velocity = (pointDirection * moveSpeed);
+                transform.position = currentPathQueue.Peek().node.transform.position;
+
+                //transform.position += (pointDirection * moveSpeed);
+                
+
+                currentPathQueue.Dequeue();
+            }
+            else
+            {
+                currentPath.Clear();
+                currentPath = new List<AStarNode>();
+                playerFound = false;
+            }
         }
     }
 
